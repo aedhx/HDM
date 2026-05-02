@@ -753,6 +753,21 @@ textarea {
 .form-submit:hover {
   background: var(--rouge-fonce);
 }
+.form-rgpd {
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--gris);
+  text-align: center;
+}
+.form-rgpd a {
+  color: var(--brun);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.form-rgpd a:hover {
+  color: var(--rouge);
+}
 
 /* ─── FOOTER ─── */
 .site-footer {
