@@ -1,15 +1,58 @@
 import { site } from "./site";
 import type { FaqItem } from "./faq";
 
+// Liste extensible des profils externes vérifiés (signal d'autorité Google + IA)
+// TODO: ajouter au fil des inscriptions :
+//   - Google Business Profile (cf. site.googleBusiness.profileUrl)
+//   - Pages Jaunes (cf. site.pagesJaunes)
+//   - Houzz, Chambre des Métiers, Bing Places, Apple Maps Connect
 const sameAs: string[] = [];
 if (site.instagram.url) sameAs.push(site.instagram.url);
 if (site.pagesJaunes) sameAs.push(site.pagesJaunes);
 if (site.googleBusiness.profileUrl) sameAs.push(site.googleBusiness.profileUrl);
 
+const personId = `${site.url}/#hugo`;
+const businessId = `${site.url}/#business`;
+const websiteId = `${site.url}/#website`;
+
+export const personSchema = {
+  "@type": "Person",
+  "@id": personId,
+  name: site.legal.director,
+  givenName: "Hugo",
+  familyName: "Di Murro",
+  jobTitle: "Artisan menuisier",
+  image: `${site.url}/images/hugo-portrait.jpg`,
+  url: site.url,
+  worksFor: { "@id": businessId },
+  knowsAbout: [
+    "Menuiserie bois",
+    "Fabrication sur mesure",
+    "Agencement intérieur",
+    "Pose de fenêtres",
+    "Escaliers bois",
+    "Rénovation menuiseries",
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: site.city,
+    postalCode: site.postalCode,
+    addressCountry: site.country,
+  },
+};
+
+export const websiteSchema = {
+  "@type": "WebSite",
+  "@id": websiteId,
+  url: site.url,
+  name: site.shortName,
+  inLanguage: "fr-FR",
+  publisher: { "@id": businessId },
+};
+
 export const localBusinessSchema = {
-  "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "@id": `${site.url}/#business`,
+  "@id": businessId,
   name: site.name,
   legalName: site.legalName,
   alternateName: site.shortName,
@@ -29,17 +72,8 @@ export const localBusinessSchema = {
   vatID: site.legal.vatId,
   taxID: site.legal.siret,
   foundingDate: site.legal.foundedAt,
-  founder: {
-    "@type": "Person",
-    name: site.legal.director,
-    jobTitle: "Artisan menuisier",
-    image: `${site.url}/images/hugo-portrait.jpg`,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: site.city,
-      addressCountry: site.country,
-    },
-  },
+  founder: { "@id": personId },
+  employee: { "@id": personId },
   address: {
     "@type": "PostalAddress",
     streetAddress: site.street,
@@ -110,8 +144,7 @@ export const localBusinessSchema = {
         itemOffered: {
           "@type": "Service",
           name: "Rénovation bois",
-          description:
-            "Parquet, terrasse, bardage, restauration menuiseries",
+          description: "Parquet, terrasse, bardage, restauration menuiseries",
         },
       },
       {
@@ -128,11 +161,28 @@ export const localBusinessSchema = {
 };
 
 export const faqSchema = (items: FaqItem[]) => ({
-  "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: items.map(({ q, a }) => ({
     "@type": "Question",
     name: q,
     acceptedAnswer: { "@type": "Answer", text: a },
   })),
+});
+
+export const breadcrumbSchema = (
+  items: { name: string; url: string }[]
+) => ({
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((it, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: it.name,
+    item: it.url,
+  })),
+});
+
+// Helper : construit un graphe Schema.org cohérent (tous les nœuds liés via @id)
+export const buildGraph = (extras: object[] = []) => ({
+  "@context": "https://schema.org",
+  "@graph": [websiteSchema, localBusinessSchema, personSchema, ...extras],
 });

@@ -2,13 +2,22 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
-import { whatsappLink } from "../data/site";
+import { site, whatsappLink } from "../data/site";
+import { buildGraph, breadcrumbSchema } from "../data/schema";
+
+const schema = buildGraph([
+  breadcrumbSchema([
+    { name: "Accueil", url: `${site.url}/` },
+    { name: "Merci", url: `${site.url}/merci/` },
+  ]),
+]);
 ---
 
 <BaseLayout
   title="Merci pour votre demande — HDM Menuiserie"
   description="Votre demande de devis a bien été envoyée. Hugo vous recontacte sous 48h."
   noindex={true}
+  schema={schema}
 >
   <Nav />
   <main class="simple-page">

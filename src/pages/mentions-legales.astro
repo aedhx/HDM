@@ -3,14 +3,23 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import { site, heroPhone } from "../data/site";
+import { buildGraph, breadcrumbSchema } from "../data/schema";
 
 const phoneDisplay = heroPhone();
+
+const schema = buildGraph([
+  breadcrumbSchema([
+    { name: "Accueil", url: `${site.url}/` },
+    { name: "Mentions légales", url: `${site.url}/mentions-legales/` },
+  ]),
+]);
 ---
 
 <BaseLayout
   title="Mentions légales — HDM Menuiserie"
   description="Mentions légales et informations sur HDM Hugo Di Murro Menuiserie, artisan menuisier à Givors (69700)."
   noindex={true}
+  schema={schema}
 >
   <Nav />
   <main class="mentions">
