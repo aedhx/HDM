@@ -19,7 +19,10 @@ export const localBusinessSchema = {
   telephone: site.phone,
   email: site.email,
   logo: `${site.url}/logo/HDM-LOGO.png`,
-  image: `${site.url}/images/og-hdm.jpg`,
+  image: [
+    `${site.url}/images/og-hdm.jpg`,
+    `${site.url}/images/hugo-portrait.jpg`,
+  ],
   priceRange: "€€",
   currenciesAccepted: "EUR",
   paymentAccepted: "Virement, Chèque, Espèces",
@@ -29,6 +32,13 @@ export const localBusinessSchema = {
   founder: {
     "@type": "Person",
     name: site.legal.director,
+    jobTitle: "Artisan menuisier",
+    image: `${site.url}/images/hugo-portrait.jpg`,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: site.city,
+      addressCountry: site.country,
+    },
   },
   address: {
     "@type": "PostalAddress",

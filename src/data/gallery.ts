@@ -2,7 +2,8 @@ export type GalleryCat =
   | "agencement"
   | "intérieur"
   | "fabrication"
-  | "rénovation";
+  | "rénovation"
+  | "atelier";
 
 export type GalleryItem = {
   src: string;
@@ -76,6 +77,27 @@ export const galleryItems: GalleryItem[] = [
     titre: "Escalier flottant — vue dessous",
     lieu: "Vienne",
   },
+  {
+    src: "/images/gallery/process-defonceuse.jpg",
+    alt: "Défonceuse Festool en cours d'usinage d'une planche à l'atelier HDM Menuiserie Givors",
+    cat: "atelier",
+    titre: "Usinage à la défonceuse",
+    lieu: "Atelier HDM",
+  },
+  {
+    src: "/images/gallery/process-scie-sauteuse.jpg",
+    alt: "Scie sauteuse Festool découpant une planche en sapin clair — atelier HDM Menuiserie",
+    cat: "atelier",
+    titre: "Découpe à la scie sauteuse",
+    lieu: "Atelier HDM",
+  },
+  {
+    src: "/images/gallery/process-tracage.jpg",
+    alt: "Traçage à l'équerre et au stylo orange sur plaque MDF — atelier HDM Menuiserie Givors",
+    cat: "atelier",
+    titre: "Traçage à l'équerre",
+    lieu: "Atelier HDM",
+  },
 ];
 
 export const galleryFilters: { key: "tous" | GalleryCat; label: string }[] = [
@@ -84,4 +106,5 @@ export const galleryFilters: { key: "tous" | GalleryCat; label: string }[] = [
   { key: "agencement", label: "Agencement" },
   { key: "fabrication", label: "Fabrication" },
   { key: "rénovation", label: "Rénovation" },
+  { key: "atelier", label: "Atelier" },
 ];

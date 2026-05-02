@@ -1,0 +1,157 @@
+---
+import { Image } from "astro:assets";
+import portraitImg from "../assets/images/hugo-portrait.jpg";
+import equipeImg from "../assets/images/equipe-hdm.jpg";
+---
+
+<section class="apropos" id="apropos" aria-labelledby="apropos-title">
+  <div class="apropos-inner">
+    <div class="apropos-media">
+      <Image
+        src={portraitImg}
+        alt="Hugo Di Murro, fondateur de HDM Menuiserie, artisan menuisier à Givors"
+        width={680}
+        height={900}
+        format="webp"
+        quality={80}
+        loading="lazy"
+        class="apropos-portrait"
+      />
+      <Image
+        src={equipeImg}
+        alt="L'équipe HDM Menuiserie portant les t-shirts logo HDM MENUISERIE sur un chantier"
+        width={520}
+        height={680}
+        format="webp"
+        quality={75}
+        loading="lazy"
+        class="apropos-equipe"
+      />
+    </div>
+
+    <div class="apropos-text">
+      <p class="section-label">L'artisan</p>
+      <h2 id="apropos-title" class="section-title">
+        Hugo Di Murro,<br /><em>au bois</em> depuis<br />plus de dix ans
+      </h2>
+
+      <p>
+        Du tracé en atelier à la pose chez vous, je travaille en direct, sans
+        intermédiaire, sur tous mes chantiers. Chaque pièce est étudiée avec
+        vous, fabriquée sur mesure et finie avec le soin qu'on doit à du bois
+        qui durera des décennies.
+      </p>
+
+      <p>
+        Après plus de dix ans à apprendre le métier auprès d'autres menuisiers
+        du secteur Rhône Sud, j'ai fondé <strong>HDM Menuiserie</strong> à
+        Givors fin 2024 pour porter mes propres projets, à mon rythme, avec
+        mes valeurs. Aujourd'hui, l'atelier accueille mes outils Festool, mes
+        plans, et l'équipe qui m'accompagne sur les chantiers les plus
+        ambitieux.
+      </p>
+
+      <ul class="apropos-points">
+        <li><strong>10+ ans</strong> d'expérience dans la menuiserie bois et l'agencement sur mesure</li>
+        <li><strong>Atelier à Givors</strong> (69700) — interventions sur Vienne et Rhône Sud, rayon 30 km</li>
+        <li><strong>Devis gratuit sous 48h</strong>, assurance RC pro et garantie décennale</li>
+      </ul>
+
+      <a href="#contact" class="btn-primary apropos-cta">Discuter de mon projet →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .apropos {
+    background: var(--blanc);
+    padding: var(--section-pad);
+  }
+  .apropos-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .apropos-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+  }
+  .apropos-portrait {
+    width: 85%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 12px 40px rgba(80, 60, 50, 0.18);
+  }
+  .apropos-equipe {
+    position: absolute;
+    right: 0;
+    bottom: -1.5rem;
+    width: 45%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 6px solid var(--blanc);
+    box-shadow: 0 8px 28px rgba(80, 60, 50, 0.22);
+  }
+  .apropos-text p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--gris);
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+  }
+  .apropos-text strong {
+    color: var(--brun);
+    font-weight: 500;
+  }
+  .apropos-text h2 em {
+    font-style: italic;
+    color: var(--bois);
+  }
+  .apropos-points {
+    list-style: none;
+    padding: 0;
+    margin: 1.8rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .apropos-points li {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--gris);
+    padding-left: 1.4rem;
+    position: relative;
+  }
+  .apropos-points li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--rouge);
+    font-weight: 600;
+  }
+  .apropos-cta {
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 900px) {
+    .apropos-inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .apropos-media {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+  }
+  @media (max-width: 600px) {
+    .apropos-equipe {
+      width: 50%;
+      bottom: -1rem;
+    }
+  }
+</style>
