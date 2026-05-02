@@ -1,0 +1,71 @@
+---
+import { Image } from "astro:assets";
+import heroImg from "../assets/images/hero-escalier.jpg";
+import { whatsappLink } from "../data/site";
+---
+
+<section class="hero" id="accueil">
+  <div class="hero-left">
+    <div class="hero-brand-block">
+      <img
+        src="/logo/HDM-SIGLE.png"
+        alt="Sigle HDM Menuiserie"
+        class="hero-sigle"
+        width="48"
+        height="48"
+        loading="eager"
+      />
+      <p class="hero-eyebrow">Hugo Di Murro Menuiserie — Givors &amp; Vienne</p>
+    </div>
+
+    <h1>Le bois,<br /><em>façonné</em> à<br />votre image</h1>
+
+    <p class="hero-desc">
+      HDM — artisan menuisier indépendant à Givors. Fabrication sur mesure,
+      pose de fenêtres, agencement intérieur et rénovation bois sur le secteur
+      Rhône Sud et Vienne.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">
+        Demander un devis →
+      </a>
+      <a
+        href={whatsappLink()}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-whatsapp"
+      >
+        WhatsApp
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">10+</div>
+        <div class="stat-label">ans d'expérience</div>
+      </div>
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label">sur mesure</div>
+      </div>
+      <div>
+        <div class="stat-num">48h</div>
+        <div class="stat-label">devis gratuit</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <Image
+      src={heroImg}
+      alt="Escalier chêne et métal suspendu réalisé par HDM Menuiserie à Vienne"
+      width={900}
+      height={1100}
+      format="webp"
+      quality={80}
+      loading="eager"
+      class="hero-right-img"
+    />
+  </div>
+</section>

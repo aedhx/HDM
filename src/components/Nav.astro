@@ -1,0 +1,77 @@
+---
+import { site } from "../data/site";
+---
+
+<nav class="nav" id="site-nav">
+  <a href="#accueil" class="nav-logo" aria-label="HDM Menuiserie — accueil">
+    <img
+      src="/logo/HDM-LOGO.png"
+      alt="HDM Hugo Di Murro Menuiserie — artisan menuisier Givors"
+      class="nav-logo-img"
+      width="120"
+      height="38"
+      loading="eager"
+    />
+  </a>
+
+  <div class="nav-right">
+    <a
+      href={site.instagram.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="nav-social"
+      aria-label={`Instagram @${site.instagram.handle}`}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+      </svg>
+    </a>
+    <a href="#contact" class="nav-cta">Devis gratuit →</a>
+  </div>
+</nav>
+
+<style>
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .nav-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    color: var(--brun);
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-social:hover {
+    color: var(--rouge);
+    background: var(--creme-fonce);
+  }
+  @media (max-width: 600px) {
+    .nav-social {
+      width: 2rem;
+      height: 2rem;
+    }
+    .nav-social svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+</style>
+
+<script>
+  const nav = document.getElementById("site-nav");
+  if (nav) {
+    const onScroll = () => {
+      if (window.scrollY > 40) nav.classList.add("scrolled");
+      else nav.classList.remove("scrolled");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+</script>

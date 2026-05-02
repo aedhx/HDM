@@ -1,0 +1,19 @@
+{
+  "name": "hdm-menuiserie",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HDM Hugo Di Murro Menuiserie — site Astro one-page",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "astro": "^4.16.10",
+    "sharp": "^0.33.5"
+  }
+}

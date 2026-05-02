@@ -1,0 +1,40 @@
+---
+import { site } from "../data/site";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img
+        src="/logo/HDM-SIGLE.png"
+        alt="Sigle HDM Menuiserie"
+        width="35"
+        height="35"
+      />
+      <span>HDM</span>&nbsp;Hugo Di Murro Menuiserie
+    </div>
+
+    <ul class="footer-links">
+      <li><a href="#services">Prestations</a></li>
+      <li><a href="#realisations">Réalisations</a></li>
+      <li><a href="#zone">Zone d'intervention</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li>
+        <a
+          href={site.instagram.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Instagram @${site.instagram.handle}`}
+        >
+          Instagram
+        </a>
+      </li>
+      <li><a href="/mentions-legales/">Mentions légales</a></li>
+    </ul>
+
+    <p class="footer-copy">
+      © {year} {site.name} — {site.city} ({site.postalCode}) — Artisan menuisier indépendant
+    </p>
+  </div>
+</footer>

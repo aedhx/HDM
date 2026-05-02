@@ -1,0 +1,100 @@
+---
+import { site } from "../data/site";
+---
+
+<section class="instagram-section" id="instagram" aria-label="Suivez HDM Menuiserie sur Instagram">
+  <div class="instagram-inner">
+    <div class="instagram-header">
+      <p class="section-label" style="justify-content:center;">Sur Instagram</p>
+      <h2 class="section-title" style="text-align:center;">
+        @{site.instagram.handle}
+      </h2>
+      <p class="instagram-intro">
+        Suivez les chantiers en cours, les coulisses de l'atelier et les pièces
+        finies — fabrication bois, escaliers, agencements sur mesure à Givors et
+        Vienne.
+      </p>
+      <a
+        href={site.instagram.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-outline instagram-cta"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+        </svg>
+        Voir le compte Instagram
+      </a>
+    </div>
+
+    {/*
+      TODO: Remplacer ce placeholder par une vraie intégration Instagram quand elle sera prête.
+      Options possibles :
+        1. Widget gratuit type LightWidget / EmbedSocial / Elfsight (script externe).
+        2. Intégration Meta Graph API officielle (nécessite un compte Instagram Business
+           lié à une page Facebook + access token long-lived).
+        3. Build-time fetch via instagram-grabber (pas officiel, fragile).
+      Pour respecter la règle "0 framework JS" et la perf Lighthouse, l'option 2 (fetch
+      au build) est la plus propre : récupérer les 6 dernières publications dans
+      astro.config.mjs et les rendre statiquement.
+    */}
+    <div class="instagram-placeholder">
+      <a
+        href={site.instagram.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Ouvrir le compte Instagram @${site.instagram.handle}`}
+      >
+        <span>Voir les publications sur Instagram →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .instagram-section {
+    background: var(--blanc);
+    padding: 6rem 3rem;
+  }
+  .instagram-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+  .instagram-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .instagram-intro {
+    font-size: 0.95rem;
+    color: var(--gris);
+    font-weight: 300;
+    max-width: 52ch;
+    margin: 0.8rem auto 1.5rem;
+    line-height: 1.75;
+  }
+  .instagram-cta {
+    margin-top: 0.5rem;
+  }
+  .instagram-placeholder {
+    border: 1.5px dashed var(--creme-fonce);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .instagram-placeholder a {
+    color: var(--rouge);
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  @media (max-width: 900px) {
+    .instagram-section {
+      padding: 4rem 1.5rem;
+    }
+  }
+</style>

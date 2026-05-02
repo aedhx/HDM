@@ -1,0 +1,103 @@
+---
+import { site } from "../data/site";
+
+const hasMapsEmbed = Boolean(site.googleBusiness.mapsEmbedUrl);
+---
+
+<section class="gb-section" id="google-business" aria-label="Localisation Google Maps de HDM Menuiserie">
+  <div class="gb-inner">
+    <div class="gb-text">
+      <p class="section-label">Sur Google</p>
+      <h2 class="section-title">Retrouvez-moi<br />sur Google Maps</h2>
+      <p class="gb-intro">
+        HDM Menuiserie est référencé sur Google Business Profile. Vous pouvez
+        consulter les avis, demander un itinéraire, ou nous appeler directement
+        depuis la fiche.
+      </p>
+      {site.googleBusiness.profileUrl && (
+        <a
+          href={site.googleBusiness.profileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-outline"
+        >
+          Voir la fiche Google →
+        </a>
+      )}
+    </div>
+
+    <div class="gb-map">
+      {hasMapsEmbed ? (
+        <iframe
+          src={site.googleBusiness.mapsEmbedUrl}
+          width="100%"
+          height="360"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Localisation HDM Menuiserie sur Google Maps"
+        ></iframe>
+      ) : (
+        <div class="gb-placeholder">
+          {/*
+            TODO Google Business :
+              1. Créer / revendiquer la fiche sur business.google.com
+              2. Récupérer l'URL embed Maps via Google Maps → Partager → Intégrer une carte
+              3. Coller l'URL dans src/data/site.ts → googleBusiness.mapsEmbedUrl
+              4. Ajouter aussi profileUrl (URL de la fiche publique) pour le bouton ci-dessus
+          */}
+          <p>📍 {site.city} ({site.postalCode})</p>
+          <p style="font-size:0.85rem; color:var(--gris); margin-top:0.6rem;">
+            Carte Google Maps disponible une fois la fiche Google Business créée.
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .gb-section {
+    background: var(--creme);
+    padding: 6rem 3rem;
+  }
+  .gb-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .gb-intro {
+    font-size: 0.95rem;
+    color: var(--gris);
+    font-weight: 300;
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+  }
+  .gb-map {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(80, 60, 50, 0.1);
+  }
+  .gb-placeholder {
+    background: var(--blanc);
+    border: 1.5px dashed var(--creme-fonce);
+    border-radius: var(--radius-lg);
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--brun);
+    font-size: 1.05rem;
+  }
+  @media (max-width: 900px) {
+    .gb-section {
+      padding: 4rem 1.5rem;
+    }
+    .gb-inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

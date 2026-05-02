@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import Services from "../components/Services.astro";
+import Gallery from "../components/Gallery.astro";
+import Zone from "../components/Zone.astro";
+import Instagram from "../components/Instagram.astro";
+import GoogleBusiness from "../components/GoogleBusiness.astro";
+import FAQ from "../components/FAQ.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import { localBusinessSchema, faqSchema } from "../data/schema";
+import { faqs } from "../data/faq";
+
+const schema = [localBusinessSchema, faqSchema(faqs)];
+---
+
+<BaseLayout
+  title="HDM Menuiserie — Artisan Menuisier Givors & Vienne | Devis Gratuit"
+  description="HDM Hugo Di Murro Menuiserie : artisan menuisier indépendant à Givors. Fabrication sur mesure, pose de fenêtres, agencement intérieur. Devis gratuit sous 48h."
+  schema={schema}
+>
+  <Nav />
+  <Hero />
+  <Services />
+  <Gallery />
+  <Zone />
+  <Instagram />
+  <GoogleBusiness />
+  <FAQ />
+  <Contact />
+  <Footer />
+  <WhatsAppButton />
+</BaseLayout>
+
+<script>
+  // Scroll reveal sur les services + faq (PRD section 7.3)
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((el) => {
+        if (el.isIntersecting) {
+          (el.target as HTMLElement).style.opacity = "1";
+          (el.target as HTMLElement).style.transform = "translateY(0)";
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+  document
+    .querySelectorAll<HTMLElement>(".service-card, .faq-item")
+    .forEach((el) => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(16px)";
+      el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+      observer.observe(el);
+    });
+</script>
