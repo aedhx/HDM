@@ -1,5 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
 import { whatsappLink } from "../data/site";
 ---
 
@@ -8,6 +10,7 @@ import { whatsappLink } from "../data/site";
   description="Votre demande de devis a bien été envoyée. Hugo vous recontacte sous 48h."
   noindex={true}
 >
+  <Nav />
   <main class="simple-page">
     <div class="simple-card">
       <h1>Merci pour votre demande !</h1>
@@ -29,4 +32,5 @@ import { whatsappLink } from "../data/site";
       </div>
     </div>
   </main>
+  <Footer />
 </BaseLayout>
