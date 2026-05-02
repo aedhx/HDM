@@ -1,0 +1,108 @@
+---
+import { Image } from "astro:assets";
+import { galleryItems, galleryFilters } from "../data/gallery";
+import { whatsappLink } from "../data/site";
+
+type ImgMod = { default: ImageMetadata };
+const imageModules = import.meta.glob<ImgMod>(
+  "../assets/images/gallery/*.jpg",
+  { eager: true }
+);
+
+const imagesByName: Record<string, ImageMetadata> = {};
+for (const [path, mod] of Object.entries(imageModules)) {
+  const name = path.split("/").pop()!;
+  imagesByName[name] = mod.default;
+}
+---
+
+<section class="galerie" id="realisations">
+  <div class="galerie-header">
+    <p class="section-label" style="justify-content:center;">Portfolio</p>
+    <h2 class="section-title" style="text-align:center;">Réalisations HDM</h2>
+    <p class="galerie-intro">
+      Quelques exemples de chantiers menés à Givors, Vienne et alentours :
+      escaliers, agencements, fabrication atelier et rénovation bois.
+    </p>
+
+    <div class="galerie-filtres" role="group" aria-label="Filtres de la galerie">
+      {galleryFilters.map((f, i) => (
+        <button
+          type="button"
+          class={`filtre-btn${i === 0 ? " active" : ""}`}
+          data-filtre={f.key}
+        >
+          {f.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="galerie-grid">
+    {galleryItems.map((item) => {
+      const fileName = item.src.split("/").pop()!;
+      const img = imagesByName[fileName];
+      return (
+        <article class="gal-card" data-cat={item.cat}>
+          <div class="gal-photo-wrap">
+            {img ? (
+              <Image
+                src={img}
+                alt={item.alt}
+                width={480}
+                height={360}
+                format="webp"
+                quality={75}
+                loading="lazy"
+              />
+            ) : (
+              <img src={item.src} alt={item.alt} loading="lazy" />
+            )}
+          </div>
+          <div class="gal-legend">
+            <span class="gal-cat">{item.cat}</span>
+            <p class="gal-titre">{item.titre}</p>
+            <span class="gal-lieu">📍 {item.lieu}</span>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+
+  <div class="galerie-cta">
+    <p style="color: var(--creme); font-family: var(--font-display); font-size: 1.4rem; font-weight: 300;">
+      Une idée en tête ?
+    </p>
+    <p style="color: rgba(247,242,234,0.7); font-size: 0.9rem; max-width: 40ch;">
+      Chaque projet commence par un échange. Décrivez-moi votre besoin.
+    </p>
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
+      <a href="#contact" class="btn-primary">Demander un devis gratuit →</a>
+      <a
+        href={whatsappLink()}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-whatsapp"
+      >
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const btns = document.querySelectorAll<HTMLButtonElement>(".filtre-btn");
+  const cards = document.querySelectorAll<HTMLElement>(".gal-card");
+  btns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      btns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      const filtre = btn.dataset.filtre ?? "tous";
+      cards.forEach((card) => {
+        const cat = card.dataset.cat ?? "";
+        const show = filtre === "tous" || cat === filtre;
+        card.classList.toggle("hidden", !show);
+      });
+    });
+  });
+</script>

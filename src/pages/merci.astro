@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { whatsappLink } from "../data/site";
+---
+
+<BaseLayout
+  title="Merci pour votre demande — HDM Menuiserie"
+  description="Votre demande de devis a bien été envoyée. Hugo vous recontacte sous 48h."
+  noindex={true}
+>
+  <main class="simple-page">
+    <div class="simple-card">
+      <h1>Merci pour votre demande !</h1>
+      <p>
+        Votre message est bien arrivé. Je reviens vers vous sous <strong>48h</strong>
+        avec un devis détaillé et sans engagement.
+      </p>
+      <p>En cas d'urgence, contactez-moi directement sur WhatsApp.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+        <a href="/" class="btn-primary">← Retour à l'accueil</a>
+        <a
+          href={whatsappLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-whatsapp"
+        >
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
