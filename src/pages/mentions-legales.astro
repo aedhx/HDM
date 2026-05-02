@@ -17,16 +17,19 @@ const phoneDisplay = heroPhone();
 
       <h2>Éditeur du site</h2>
       <p>
-        <strong>{site.name}</strong><br />
-        Hugo Di Murro, artisan menuisier indépendant<br />
-        {site.city} ({site.postalCode}) — {site.region}, {site.country}
-        {/* TODO: ajouter l'adresse précise et le numéro SIRET avant mise en prod */}
+        <strong>{site.legalName}</strong> ({site.legal.legalForm})<br />
+        Représentée par {site.legal.director}, {site.legal.directorRole}<br />
+        Siège social : {site.street}, {site.postalCode} {site.city} — {site.region}, France
       </p>
       <ul>
         <li>Téléphone : <a href={`tel:${site.phone}`}>{phoneDisplay}</a></li>
         <li>Email : <a href={`mailto:${site.email}`}>{site.email}</a></li>
-        <li>SIRET : <em>à compléter</em></li>
-        <li>TVA intracommunautaire : <em>à compléter</em></li>
+        <li>SIREN : {site.legal.siren}</li>
+        <li>SIRET (siège) : {site.legal.siret}</li>
+        <li>TVA intracommunautaire : {site.legal.vatId}</li>
+        <li>Code APE/NAF : {site.legal.naf} — {site.legal.nafLabel}</li>
+        <li>Date de création : {new Date(site.legal.foundedAt).toLocaleDateString("fr-FR")}</li>
+        {site.legal.capital && <li>Capital social : {site.legal.capital}</li>}
         <li>Assurance RC professionnelle et garantie décennale : attestations sur demande</li>
       </ul>
 

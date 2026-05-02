@@ -17,9 +17,14 @@ const {
   description,
   canonical,
   ogImage = "/images/og-hdm.jpg",
-  noindex = false,
+  noindex: noindexProp,
   schema,
 } = Astro.props;
+
+// Force noindex sur tous les déploiements non-prod (deploy-preview, branch-deploy)
+// pour éviter que Google indexe l'URL *.netlify.app à la place du domaine final.
+const isProduction = process.env.CONTEXT === "production";
+const noindex = noindexProp ?? !isProduction;
 
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site.url).toString();
 const ogImageUrl = `${site.url}${ogImage}`;

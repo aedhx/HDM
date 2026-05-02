@@ -11,9 +11,10 @@ export const localBusinessSchema = {
   "@type": "LocalBusiness",
   "@id": `${site.url}/#business`,
   name: site.name,
+  legalName: site.legalName,
   alternateName: site.shortName,
   description:
-    "Artisan menuisier indépendant basé à Givors. Fabrication sur mesure, pose de fenêtres, agencement intérieur, rénovation bois. Devis gratuit sous 48h.",
+    "Artisan menuisier basé à Givors. Fabrication sur mesure, pose de fenêtres, agencement intérieur, rénovation bois. Devis gratuit sous 48h.",
   url: site.url,
   telephone: site.phone,
   email: site.email,
@@ -22,8 +23,16 @@ export const localBusinessSchema = {
   priceRange: "€€",
   currenciesAccepted: "EUR",
   paymentAccepted: "Virement, Chèque, Espèces",
+  vatID: site.legal.vatId,
+  taxID: site.legal.siret,
+  foundingDate: site.legal.foundedAt,
+  founder: {
+    "@type": "Person",
+    name: site.legal.director,
+  },
   address: {
     "@type": "PostalAddress",
+    streetAddress: site.street,
     addressLocality: site.city,
     postalCode: site.postalCode,
     addressRegion: site.region,
