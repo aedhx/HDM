@@ -101,6 +101,14 @@
   font-style: italic;
   color: var(--bois);
 }
+.hero-h1-tagline {
+  display: block;
+  font-size: 0.55em;
+  color: var(--gris);
+  font-weight: 300;
+  margin-top: 0.6rem;
+  font-style: italic;
+}
 .hero-desc {
   font-size: 1rem;
   line-height: 1.75;
