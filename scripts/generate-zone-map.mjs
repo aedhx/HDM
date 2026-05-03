@@ -53,20 +53,23 @@ const overlays = [];
 overlays.push(`geojson(${encodeURIComponent(JSON.stringify(ringOuter))})`);
 overlays.push(`pin-l-circle+BF1B2C(${center.lon},${center.lat})`);
 
-// Style sombre pour matcher la section Zone (fond --noir).
-const style = "mapbox/dark-v11";
+// Style HDM custom (créé via scripts/create-hdm-style.mjs sur le compte adx-hdm).
+// Patch de mapbox/dark-v11 aux couleurs charte : charbon, brun, bois-clair, crème.
+const style = "adx-hdm/cmopnzcve006v01so8fqsfnqi";
 const W = 1200;
 const H = 675; // ratio 16:9
 const ZOOM = 9.4; // cadrage tel que le cercle 30 km tient bien à l'écran
 const BEARING = 0;
 const PITCH = 0;
 
+// Cache-buster pour forcer un nouveau rendu après une update du style.
+const cacheBust = Date.now();
 const url =
   `https://api.mapbox.com/styles/v1/${style}/static/` +
   `${overlays.join(",")}/` +
   `${center.lon},${center.lat},${ZOOM},${BEARING},${PITCH}/` +
   `${W}x${H}@2x` +
-  `?access_token=${TOKEN}&logo=false&attribution=false`;
+  `?access_token=${TOKEN}&logo=false&attribution=false&fresh=true&_=${cacheBust}`;
 
 console.log(`URL length: ${url.length} chars`);
 console.log("Fetching map…");
