@@ -3,7 +3,7 @@ export type FaqItem = { q: string; a: string };
 export const faqs: FaqItem[] = [
   {
     q: "Le devis est-il vraiment gratuit et sans engagement ?",
-    a: "Oui, le devis est totalement gratuit et sans aucun engagement. Je me déplace pour voir le chantier si nécessaire, et vous recevez un devis détaillé sous 48h avec le descriptif complet des travaux et le tarif.",
+    a: "Oui, le devis est totalement gratuit et sans aucun engagement. Je me déplace pour voir le chantier si nécessaire, et vous recevez un devis détaillé avec le descriptif complet des travaux et le tarif.",
   },
   {
     q: "Quels sont vos délais d'intervention en moyenne ?",

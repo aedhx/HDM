@@ -1,9 +1,11 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import { site, whatsappLink } from "../data/site";
 import { buildGraph, breadcrumbSchema } from "../data/schema";
+import hugoPortrait from "../assets/images/hugo-portrait.jpg";
 
 const schema = buildGraph([
   breadcrumbSchema([
@@ -15,31 +17,228 @@ const schema = buildGraph([
 
 <BaseLayout
   title="Merci pour votre demande — HDM Menuiserie"
-  description="Votre demande de devis a bien été envoyée. Hugo vous recontacte sous 48h."
+  description="Votre demande de devis a bien été envoyée. Hugo Di Murro revient vers vous personnellement."
   noindex={true}
   schema={schema}
 >
   <Nav />
-  <main class="simple-page">
-    <div class="simple-card">
-      <h1>Merci pour votre demande !</h1>
-      <p>
-        Votre message est bien arrivé. Je reviens vers vous sous <strong>48h</strong>
-        avec un devis détaillé et sans engagement.
+  <main class="merci-page">
+    <article class="merci-card">
+      <Image
+        src={hugoPortrait}
+        alt="Hugo Di Murro, artisan menuisier HDM Menuiserie"
+        widths={[120, 240]}
+        sizes="120px"
+        format="webp"
+        quality={85}
+        loading="eager"
+        class="merci-portrait"
+      />
+
+      <p class="section-label" style="justify-content:center;">Demande reçue</p>
+      <h1>Merci !</h1>
+      <p class="merci-lead">
+        Votre demande est bien arrivée. Je l'étudie personnellement et reviens
+        vers vous avec un devis clair et détaillé.
       </p>
-      <p>En cas d'urgence, contactez-moi directement sur WhatsApp.</p>
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-        <a href="/" class="btn-primary">← Retour à l'accueil</a>
+
+      <ol class="merci-steps">
+        <li>
+          <span class="merci-step-num">1</span>
+          <div>
+            <strong>Étude de votre projet</strong>
+            <p>Je relis vos informations et identifie les points à préciser avec vous.</p>
+          </div>
+        </li>
+        <li>
+          <span class="merci-step-num">2</span>
+          <div>
+            <strong>Échange par téléphone ou WhatsApp</strong>
+            <p>On affine ensemble les détails (matériaux, dimensions, finitions, contraintes).</p>
+          </div>
+        </li>
+        <li>
+          <span class="merci-step-num">3</span>
+          <div>
+            <strong>Devis détaillé envoyé</strong>
+            <p>Vous recevez le descriptif complet, le prix, et les délais — sans engagement.</p>
+          </div>
+        </li>
+      </ol>
+
+      <p class="merci-signature">
+        À très vite,<br />
+        <span class="merci-signature-name">— Hugo Di Murro</span><br />
+        <span class="merci-signature-role">Artisan menuisier · HDM Menuiserie</span>
+      </p>
+
+      <div class="merci-actions">
+        <a href="/" class="btn-outline">← Retour à l'accueil</a>
         <a
-          href={whatsappLink()}
+          href={whatsappLink("Bonjour Hugo, j'ai envoyé une demande via le site, je voulais juste te le signaler.")}
           target="_blank"
           rel="noopener noreferrer"
           class="btn-whatsapp"
         >
-          WhatsApp
+          Me joindre sur WhatsApp
         </a>
       </div>
-    </div>
+
+      <p class="merci-followup">
+        En attendant, suivez les chantiers en cours et les pièces sortant
+        de l'atelier sur
+        <a href={site.instagram.url} target="_blank" rel="noopener noreferrer">
+          Instagram @{site.instagram.handle}
+        </a>.
+      </p>
+    </article>
   </main>
   <Footer />
 </BaseLayout>
+
+<style>
+  .merci-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7rem 1.5rem 4rem;
+    background: linear-gradient(180deg, var(--blanc) 0%, var(--creme) 100%);
+  }
+  .merci-card {
+    max-width: 640px;
+    text-align: center;
+    background: var(--blanc);
+    padding: 3.5rem 2.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 16px 48px rgba(80, 60, 50, 0.08);
+    border: 1px solid var(--creme-fonce);
+  }
+  .merci-portrait {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 25%;
+    margin: 0 auto 1.5rem;
+    border: 4px solid var(--creme);
+    box-shadow: 0 8px 24px rgba(80, 60, 50, 0.15);
+    display: block;
+  }
+  .merci-card h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 6vw, 4rem);
+    font-weight: 300;
+    color: var(--brun);
+    margin: 0.5rem 0 1.5rem;
+    line-height: 1;
+  }
+  .merci-lead {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--gris);
+    margin: 0 auto 2.5rem;
+    max-width: 44ch;
+    font-weight: 300;
+  }
+  .merci-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 2.5rem;
+    max-width: 480px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .merci-steps li {
+    display: flex;
+    gap: 1.1rem;
+    align-items: flex-start;
+  }
+  .merci-step-num {
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background: var(--rouge);
+    color: var(--creme);
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .merci-steps strong {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--brun);
+    margin-bottom: 0.2rem;
+  }
+  .merci-steps p {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--gris);
+    margin: 0;
+    font-weight: 300;
+  }
+  .merci-signature {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--gris);
+    margin: 0 auto 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--creme-fonce);
+    font-weight: 300;
+  }
+  .merci-signature-name {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--brun);
+    display: inline-block;
+    margin-top: 0.4rem;
+  }
+  .merci-signature-role {
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--bois);
+    display: inline-block;
+    margin-top: 0.3rem;
+  }
+  .merci-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .merci-followup {
+    font-size: 0.85rem;
+    color: var(--gris);
+    line-height: 1.6;
+    font-weight: 300;
+    margin: 0;
+  }
+  .merci-followup a {
+    color: var(--rouge);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .merci-followup a:hover {
+    color: var(--rouge-fonce);
+  }
+  @media (max-width: 600px) {
+    .merci-page {
+      padding: 6rem 1rem 3rem;
+    }
+    .merci-card {
+      padding: 2.5rem 1.5rem;
+    }
+  }
+</style>
