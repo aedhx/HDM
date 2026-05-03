@@ -47,7 +47,7 @@ const svg = `
         letter-spacing="3">MENUISIER ARTISAN — GIVORS &amp; VIENNE</text>
   <text x="80" y="565" font-family="-apple-system, system-ui, sans-serif"
         font-size="18" font-weight="400" fill="#6B6259">
-    hdm-menuiserie.fr · Devis gratuit sous 48h
+    hdm-menuiserie.fr · Devis gratuit, sans engagement
   </text>
 </svg>
 `;

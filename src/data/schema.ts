@@ -57,7 +57,7 @@ export const localBusinessSchema = {
   legalName: site.legalName,
   alternateName: site.shortName,
   description:
-    "Artisan menuisier basé à Givors. Fabrication sur mesure, pose de fenêtres, agencement intérieur, rénovation bois. Devis gratuit sous 48h.",
+    "Artisan menuisier basé à Givors. Fabrication sur mesure, pose de fenêtres, agencement intérieur, rénovation bois. Devis gratuit.",
   url: site.url,
   telephone: site.phone,
   email: site.email,
