@@ -98,6 +98,13 @@ export const galleryItems: GalleryItem[] = [
     titre: "Traçage à l'équerre",
     lieu: "Atelier HDM",
   },
+  {
+    src: "/images/gallery/atelier-reflexion-plans.jpg",
+    alt: "Hugo Di Murro étudiant les plans techniques avant fabrication — atelier HDM Menuiserie Givors",
+    cat: "atelier",
+    titre: "Étude des plans avant fabrication",
+    lieu: "Atelier HDM",
+  },
 ];
 
 export const galleryFilters: { key: "tous" | GalleryCat; label: string }[] = [
