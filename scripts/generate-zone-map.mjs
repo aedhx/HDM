@@ -14,25 +14,14 @@ if (!TOKEN) {
   process.exit(1);
 }
 
-// Givors = centre. Coordonnées des villes du secteur.
-const cities = {
-  Givors: { lat: 45.5765, lon: 4.7891, main: true },
-  Vienne: { lat: 45.5230, lon: 4.8742 },
-  "Loire-sur-Rhône": { lat: 45.6014, lon: 4.7891 },
-  Grigny: { lat: 45.6021, lon: 4.7882 },
-  "Chasse-sur-Rhône": { lat: 45.5810, lon: 4.7956 },
-  Ternay: { lat: 45.6113, lon: 4.8120 },
-  "Saint-Symphorien-d'Ozon": { lat: 45.6346, lon: 4.8290 },
-  Millery: { lat: 45.6420, lon: 4.7560 },
-  "Chonas-l'Amballan": { lat: 45.4773, lon: 4.8425 },
-  "Reventin-Vaugris": { lat: 45.4843, lon: 4.8421 },
-};
-
+// Centré sur Givors. Pas de pins sur les autres villes : on veut que la carte
+// communique un *périmètre d'intervention*, pas une liste finie de chantiers.
+// La liste de villes affichée à côté de la carte reste la référence textuelle.
+const center = { lat: 45.5765, lon: 4.7891 };
 const RADIUS_KM = 30;
-const center = cities.Givors;
 
 // Cercle ~30 km sous forme de polygone GeoJSON (64 segments).
-function circleFeature(lat, lon, radiusKm, points = 64) {
+function circleFeature(lat, lon, radiusKm, points = 96, props = {}) {
   const earthRadius = 6371;
   const coords = [];
   const cosLat = Math.cos((lat * Math.PI) / 180);
@@ -45,27 +34,24 @@ function circleFeature(lat, lon, radiusKm, points = 64) {
   }
   return {
     type: "Feature",
-    properties: {
-      stroke: "#C4956A",
-      "stroke-width": 2,
-      "stroke-opacity": 0.7,
-      fill: "#BF1B2C",
-      "fill-opacity": 0.06,
-    },
+    properties: props,
     geometry: { type: "Polygon", coordinates: [coords] },
   };
 }
 
-const circle = circleFeature(center.lat, center.lon, RADIUS_KM);
+// Cercle 30 km : remplissage rouge transparent + contour bois-clair plus marqué.
+const ringOuter = circleFeature(center.lat, center.lon, RADIUS_KM, 96, {
+  stroke: "#C4956A",
+  "stroke-width": 3,
+  "stroke-opacity": 0.85,
+  fill: "#BF1B2C",
+  "fill-opacity": 0.1,
+});
 
-// Markers — pin-l (large) rouge pour Givors, pin-s (small) crème pour les autres.
+// Pin Givors uniquement : signal "centre", pas une liste finie.
 const overlays = [];
-overlays.push(`geojson(${encodeURIComponent(JSON.stringify(circle))})`);
+overlays.push(`geojson(${encodeURIComponent(JSON.stringify(ringOuter))})`);
 overlays.push(`pin-l-circle+BF1B2C(${center.lon},${center.lat})`);
-for (const [name, city] of Object.entries(cities)) {
-  if (city.main) continue;
-  overlays.push(`pin-s+C4956A(${city.lon},${city.lat})`);
-}
 
 // Style sombre pour matcher la section Zone (fond --noir).
 const style = "mapbox/dark-v11";
