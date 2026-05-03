@@ -1,138 +1,166 @@
-// Crée un style Mapbox Studio personnalisé "HDM Zone" aux couleurs de la charte.
-// Méthode : fetch du style mapbox/dark-v11 comme base, patch des couleurs des
-// principales couches (background, eau, routes, labels) vers la palette HDM,
-// puis POST sur l'endpoint Styles API du compte de l'utilisateur.
+// Crée OU met à jour un style Mapbox Studio personnalisé "HDM Zone".
 //
-// Prérequis : variable d'env MAPBOX_SECRET_TOKEN (sk.*) avec le scope
-// "styles:write". Crée-le sur mapbox.com → Account → Tokens, scope unique
-// styles:write, name "hdm-style-creation". Tu peux le révoquer après usage.
-//
-// Usage : MAPBOX_SECRET_TOKEN=sk.xxx node scripts/create-hdm-style.mjs
+// Usage :
+//   - Création : MAPBOX_SECRET_TOKEN=sk.xxx node scripts/create-hdm-style.mjs
+//   - Update   : MAPBOX_SECRET_TOKEN=sk.xxx STYLE_ID=cmop... node scripts/create-hdm-style.mjs
 
 const TOKEN = process.env.MAPBOX_SECRET_TOKEN;
+const STYLE_ID = process.env.STYLE_ID;
 if (!TOKEN || !TOKEN.startsWith("sk.")) {
   console.error("Manque MAPBOX_SECRET_TOKEN (sk.*) avec scope styles:write");
   process.exit(1);
 }
 
-// Décode le username depuis le payload JWT du token
 const username = JSON.parse(
   Buffer.from(TOKEN.split(".")[1], "base64").toString()
 ).u;
 console.log(`Username Mapbox : ${username}`);
 
-// 1. Fetch du style dark-v11 (en lecture publique, accessible avec sk. token)
+// Toujours repartir de dark-v11 (clean state)
 const baseStyle = await (
   await fetch(
     `https://api.mapbox.com/styles/v1/mapbox/dark-v11?access_token=${TOKEN}`
   )
 ).json();
+console.log(`Base dark-v11 chargée : ${baseStyle.layers.length} layers`);
 
-if (!baseStyle.layers) {
-  console.error("Échec du fetch dark-v11 :", baseStyle);
-  process.exit(1);
-}
-console.log(`Base style chargé : ${baseStyle.layers.length} layers`);
-
-// 2. Palette HDM
 const HDM = {
   charbon: "#1a1210",
+  brunFonce: "#2a1f1c",
   brun: "#503c32",
-  bois: "#8B5E3C",
-  boisClair: "#C4956A",
+  bois: "#8b5e3c",
+  boisClair: "#c4956a",
   rouge: "#bf1b2c",
-  creme: "#F7F2EA",
-  cremeFonce: "#EDE6D8",
-  blanc: "#FDFAF5",
-  gris: "#6B6259",
+  creme: "#f7f2ea",
+  cremeFonce: "#ede6d8",
+  gris: "#6b6259",
 };
 
-// 3. Patch des layers — heuristique par id
-const patchPaint = (layer, key, value) => {
-  if (!layer.paint) layer.paint = {};
-  layer.paint[key] = value;
+// Matchers explicites identifiés depuis l'inspection de la structure dark-v11
+const HIDE_LABELS = new Set([
+  "road-label-simple",
+  "waterway-label",
+  "water-line-label",
+  "water-point-label",
+  "natural-line-label",
+  "natural-point-label",
+  "poi-label",
+  "airport-label",
+  "transit-label",
+  "settlement-subdivision-label",
+  "country-label",
+  "continent-label",
+  "state-label",
+]);
+
+const SHOW_CITY_LABELS = new Set([
+  "settlement-major-label",
+  "settlement-minor-label",
+]);
+
+const HIDE_LAYERS = new Set([
+  "building",
+  "admin-1-boundary-bg",
+  "admin-0-boundary-bg",
+  "admin-1-boundary",
+  "admin-0-boundary",
+  "admin-0-boundary-disputed",
+  "land-structure-line",
+  "land-structure-polygon",
+  "aeroway-polygon",
+  "aeroway-line",
+]);
+
+let patched = 0;
+const setPaint = (l, k, v) => {
+  if (!l.paint) l.paint = {};
+  l.paint[k] = v;
+  patched++;
 };
-const setOpacity = (layer, key, value) => patchPaint(layer, key, value);
 
 for (const layer of baseStyle.layers) {
   const id = layer.id;
-  const type = layer.type;
+  const t = layer.type;
 
-  // Fond global
-  if (id === "background" || id === "land") {
-    patchPaint(layer, "background-color", HDM.charbon);
-    if (type === "fill") patchPaint(layer, "fill-color", HDM.charbon);
+  // Cacher complètement
+  if (HIDE_LAYERS.has(id)) {
+    if (t === "fill") setPaint(layer, "fill-opacity", 0);
+    if (t === "line") setPaint(layer, "line-opacity", 0);
+    continue;
   }
 
-  // Eau (Rhône, lacs)
-  if (id.includes("water") || id === "water") {
-    if (type === "fill") {
-      patchPaint(layer, "fill-color", HDM.brun);
-      patchPaint(layer, "fill-opacity", 0.85);
+  // Background → charbon HDM
+  if (id === "land" || t === "background") {
+    setPaint(layer, "background-color", HDM.charbon);
+    continue;
+  }
+
+  // Eau (Rhône, lacs) → brun marqué
+  if (id === "water") {
+    setPaint(layer, "fill-color", HDM.brun);
+    setPaint(layer, "fill-opacity", 0.95);
+    continue;
+  }
+  if (id === "waterway") {
+    setPaint(layer, "line-color", HDM.brun);
+    setPaint(layer, "line-opacity", 0.85);
+    continue;
+  }
+
+  // Parcs / espaces verts → ton très subtil
+  if (id === "national-park" || id === "landuse") {
+    setPaint(layer, "fill-color", HDM.brunFonce);
+    setPaint(layer, "fill-opacity", 0.5);
+    continue;
+  }
+
+  // Routes principales (road-simple porte la hiérarchie via data-driven)
+  // → on remplace par bois-clair lumineux pour qu'elles ressortent vraiment
+  if (id === "road-simple" || id === "bridge-simple") {
+    setPaint(layer, "line-color", HDM.boisClair);
+    setPaint(layer, "line-opacity", 0.9);
+    continue;
+  }
+  if (id === "tunnel-simple") {
+    setPaint(layer, "line-color", HDM.boisClair);
+    setPaint(layer, "line-opacity", 0.55);
+    continue;
+  }
+  // Variantes de routes secondaires
+  if (
+    id.startsWith("road-") ||
+    id.startsWith("bridge-") ||
+    id.startsWith("tunnel-")
+  ) {
+    if (t === "line") {
+      setPaint(layer, "line-color", HDM.bois);
+      setPaint(layer, "line-opacity", 0.4);
     }
+    continue;
   }
 
-  // Parcs, espaces verts → ton brun chaud très subtil
-  if (id.includes("landuse") || id.includes("park") || id.includes("national")) {
-    if (type === "fill") patchPaint(layer, "fill-color", "#241915");
+  // Labels de villes principales → crème lisible avec halo charbon
+  if (SHOW_CITY_LABELS.has(id)) {
+    setPaint(layer, "text-color", HDM.creme);
+    setPaint(layer, "text-halo-color", HDM.charbon);
+    setPaint(layer, "text-halo-width", 1.6);
+    setPaint(layer, "text-halo-blur", 0.5);
+    setPaint(layer, "icon-opacity", 0);
+    continue;
   }
 
-  // Routes
-  if (id.includes("road") || id.includes("highway") || id.includes("motorway")) {
-    if (type === "line") {
-      // Hiérarchie : majeures = bois-clair lumineux, secondaires = bois moyen
-      if (id.includes("motorway") || id.includes("primary") || id.includes("trunk")) {
-        patchPaint(layer, "line-color", HDM.boisClair);
-        patchPaint(layer, "line-opacity", 0.9);
-      } else if (id.includes("secondary") || id.includes("street-major")) {
-        patchPaint(layer, "line-color", HDM.bois);
-        patchPaint(layer, "line-opacity", 0.55);
-      } else {
-        patchPaint(layer, "line-color", HDM.bois);
-        patchPaint(layer, "line-opacity", 0.25);
-      }
-    }
-  }
-
-  // Bâtiments → invisibles (la map doit être épurée)
-  if (id.includes("building")) {
-    patchPaint(layer, "fill-opacity", 0);
-  }
-
-  // Frontières administratives → très discrètes
-  if (id.includes("admin") || id.includes("boundary")) {
-    if (type === "line") {
-      patchPaint(layer, "line-color", HDM.brun);
-      patchPaint(layer, "line-opacity", 0.4);
-    }
-  }
-
-  // Labels — villes principales en crème clair, le reste invisible
-  if (type === "symbol") {
-    if (
-      id.includes("place-city") ||
-      id.includes("settlement-major") ||
-      id.includes("settlement-subdivision-label") ||
-      id === "place-city-lg-n" ||
-      id === "place-city-lg-s"
-    ) {
-      patchPaint(layer, "text-color", HDM.creme);
-      patchPaint(layer, "text-halo-color", HDM.charbon);
-      patchPaint(layer, "text-halo-width", 1.4);
-    } else if (id.includes("place") || id.includes("settlement")) {
-      patchPaint(layer, "text-color", HDM.cremeFonce);
-      patchPaint(layer, "text-opacity", 0.45);
-      patchPaint(layer, "text-halo-color", HDM.charbon);
-    } else {
-      // POI, road labels, transit, etc. → masqués
-      patchPaint(layer, "text-opacity", 0);
-      patchPaint(layer, "icon-opacity", 0);
-    }
+  // Tous les autres labels (POI, routes, transit…) → masqués
+  if (t === "symbol" || HIDE_LABELS.has(id)) {
+    setPaint(layer, "text-opacity", 0);
+    setPaint(layer, "icon-opacity", 0);
+    continue;
   }
 }
 
-// 4. Préparation du payload de création
-const newStyle = {
+console.log(`${patched} propriétés peintes/masquées`);
+
+// Préparation payload
+const payload = {
   ...baseStyle,
   name: "HDM Zone",
   metadata: {
@@ -141,23 +169,24 @@ const newStyle = {
     "mapbox:autocomposite": true,
   },
 };
-delete newStyle.id;
-delete newStyle.created;
-delete newStyle.modified;
-delete newStyle.owner;
-delete newStyle.visibility;
-delete newStyle.draft;
+delete payload.id;
+delete payload.created;
+delete payload.modified;
+delete payload.owner;
+delete payload.visibility;
+delete payload.draft;
 
-// 5. POST sur l'API
-console.log(`Création du style sur ${username}…`);
-const res = await fetch(
-  `https://api.mapbox.com/styles/v1/${username}?access_token=${TOKEN}`,
-  {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(newStyle),
-  }
-);
+const url = STYLE_ID
+  ? `https://api.mapbox.com/styles/v1/${username}/${STYLE_ID}?access_token=${TOKEN}`
+  : `https://api.mapbox.com/styles/v1/${username}?access_token=${TOKEN}`;
+const method = STYLE_ID ? "PATCH" : "POST";
+console.log(`${method} ${STYLE_ID || "(nouveau)"}…`);
+
+const res = await fetch(url, {
+  method,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload),
+});
 
 const out = await res.json();
 if (!res.ok) {
@@ -165,9 +194,6 @@ if (!res.ok) {
   process.exit(1);
 }
 
-console.log("\n✓ Style créé !");
-console.log(`  ID      : ${out.id}`);
-console.log(`  Owner   : ${out.owner}`);
-console.log(`  URL     : mapbox://styles/${out.owner}/${out.id}`);
-console.log(`  Reference (à coller dans generate-zone-map.mjs) :`);
-console.log(`  const style = "${out.owner}/${out.id}";`);
+console.log("\n✓ OK");
+console.log(`  Style ID : ${out.id}`);
+console.log(`  Reference : ${out.owner}/${out.id}`);
