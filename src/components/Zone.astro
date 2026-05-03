@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import zoneMapImg from "../assets/images/zone-map.png";
+
 const mainCities = ["Givors", "Vienne (38)"];
 const otherCities = [
   "Loire sur Rhône",
@@ -31,33 +34,17 @@ const otherCities = [
       </p>
     </div>
 
-    <div class="zone-map" aria-label="Carte stylisée du secteur d'intervention HDM autour de Givors">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-        <path
-          d="M100,20 Q120,40 110,70 Q130,90 120,120 Q140,150 120,180"
-          stroke="#C4956A"
-          stroke-width="3"
-          fill="none"
-          stroke-linecap="round"
-        />
-        <circle cx="108" cy="115" r="8" fill="#bf1b2c" opacity="0.95" />
-        <circle cx="108" cy="115" r="14" fill="#bf1b2c" opacity="0.25" class="pulse" />
-        <circle cx="118" cy="145" r="6" fill="rgba(247,242,234,0.55)" />
-        <circle cx="105" cy="100" r="4" fill="rgba(247,242,234,0.3)" />
-        <circle cx="102" cy="90" r="4" fill="rgba(247,242,234,0.3)" />
-        <text x="122" y="118" fill="#C4956A" font-size="10" font-family="serif" font-style="italic">Givors</text>
-        <text x="128" y="148" fill="rgba(247,242,234,0.6)" font-size="9" font-family="serif">Vienne</text>
-        <circle
-          cx="108"
-          cy="115"
-          r="55"
-          stroke="#C4956A"
-          stroke-width="1"
-          fill="none"
-          stroke-dasharray="4,4"
-          opacity="0.35"
-        />
-      </svg>
+    <div class="zone-map">
+      <Image
+        src={zoneMapImg}
+        alt="Carte du secteur d'intervention HDM Menuiserie : rayon de 30 km autour de Givors couvrant Vienne, Loire-sur-Rhône, Grigny, Chasse-sur-Rhône et les communes alentour"
+        widths={[600, 900, 1200]}
+        sizes="(max-width: 900px) 100vw, 600px"
+        format="webp"
+        quality={75}
+        loading="lazy"
+        class="zone-map-img"
+      />
     </div>
   </div>
 </section>
